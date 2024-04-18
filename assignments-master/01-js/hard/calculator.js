@@ -16,6 +16,70 @@
   Once you've implemented the logic, test your code by running
 */
 
-class Calculator {}
+class Calculator {
+  constructor(){
+    this.result = 0;
+  }
+  add(number){
+    this.result += number;
+  }
+  subtract(number){
+    this.result -= number;
+  }
+  multiply(number){
+    this.result *= number;
+  }
+  divide(number){
+    this.result /= number;
+  }
+  clear(){
+    this.result = 0;
+  }
+  getResult(){
+    return this.result;
+  }
+
+  calculate(expression) {
+        // Strip out extra spaces and handle invalid characters
+        const sanitizedExpression = expression.replace(/\s+/g, '');
+        if (!/^[\d+\-*/().]*$/.test(sanitizedExpression)) {
+            throw new Error("Invalid characters in expression.");
+        }
+
+        try {
+            // Evaluate the expression safely using Function
+            // This method is safer than eval as it does not allow access to local scope
+            const result = Function('return (' + sanitizedExpression + ')')();
+            this.result = result;
+            return result;
+        } catch (error) {
+            throw new Error("Invalid expression.");
+        }
+    }
+
+}
+
+// Test the code
+const calc = new Calculator();
+try {
+  calc.add(10);
+  console.log(calc.getResult()); //10
+
+  calc.subtract(5);
+  console.log(calc.getResult()); //5
+
+  calc.multiply(4);
+  console.log(calc.getResult()); //20
+
+  calc.divide(2);
+  console.log(calc.getResult()); //10
+
+  calc.clear();
+  console.log(calc.getResult()); //0
+
+  console.log(calc.calculate("10 + 2 * (6 - (4 + 1) / 2) + 7")); // Should log: 23
+} catch (e){
+  console.error(e);
+}
 
 module.exports = Calculator;
